@@ -5,7 +5,7 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 To create a new project using this boilerplate, run:
 
 ```bash
-npx create-nextjs-boilerplate <your-project-name>
+npx create-kakashi-nextjs-template <your-project-name>
 ```
 
 Replace `<your-project-name>` with the desired name for your new project.
