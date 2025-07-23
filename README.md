@@ -1,5 +1,22 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Quick Start
+
+To create a new project using this boilerplate, run:
+
+```bash
+npx create-nextjs-boilerplate <your-project-name>
+```
+
+Replace `<your-project-name>` with the desired name for your new project.
+
+This command will:
+
+1. Create a new directory with your project name.
+2. Copy all boilerplate files into the new directory.
+3. Install all necessary dependencies.
+4. Initialize a new Git repository.
+
 ## Getting Started
 
 First, run the development server:

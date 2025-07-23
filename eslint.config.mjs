@@ -10,6 +10,7 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
+  { ignores: ["bin/"] }, // Add this line to ignore the bin directory
   ...compat.extends("next/core-web-vitals", "next/typescript"),
 ];
 

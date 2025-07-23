@@ -1,12 +1,46 @@
 {
   "name": "nextjs-boilerplate",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
+  "description": "A comprehensive Next.js boilerplate with modern features and best practices.",
+  "keywords": [
+    "nextjs",
+    "react",
+    "boilerplate",
+    "template",
+    "typescript",
+    "tailwindcss",
+    "nextjs-template",
+    "create-next-app"
+  ],
+  "author": "mkashif247",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mkashif247/nextjs-boilerplate.git"
+  },
+  "bin": {
+    "create-nextjs-boilerplate": "./bin/create-app.js"
+  },
+  "files": [
+    "src/",
+    "public/",
+    "components.json",
+    "eslint.config.mjs",
+    "next.config.ts",
+    "postcss.config.mjs",
+    "tailwind.config.ts",
+    "tsconfig.json",
+    "package.json",
+    "README.md",
+    "bin/"
+  ],
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "postinstall": "chmod +x bin/create-app.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",
@@ -19,6 +53,7 @@
     "axios": "^1.11.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "fs-extra": "^11.2.0",
     "i18next": "^25.3.2",
     "lucide-react": "^0.525.0",
     "next": "^15.4.3",
