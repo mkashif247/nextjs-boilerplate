@@ -23,9 +23,11 @@ console.log(`Creating a new Next.js app in ${root}.`);
 const templateDir = path.resolve(__dirname, '..');
 
 fs.copySync(templateDir, root, {
-    filter: (src) => {
-        // Exclude node_modules, .git, and the bin directory itself
-        return !/node_modules|\.git|bin/.test(src);
+    filter: (src, dest) => {
+        const relativePath = path.relative(templateDir, src);
+        const exclude = ['node_modules', '.git', 'bin', 'package-lock.json'];
+        // Exclude top-level directories like node_modules, .git, and bin, and also package-lock.json
+        return !exclude.some(dir => relativePath === dir || relativePath.startsWith(dir + path.sep));
     },
 });
 
