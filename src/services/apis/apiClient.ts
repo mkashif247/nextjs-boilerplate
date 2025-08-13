@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { ACCESS_TOKEN } from '@/constants/appConstants';
 
 const apiClient = axios.create({
     baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || '/api',
@@ -9,7 +10,7 @@ const apiClient = axios.create({
 
 apiClient.interceptors.request.use(
     (config) => {
-        const token = localStorage.getItem('authToken');
+        const token = localStorage.getItem(ACCESS_TOKEN);
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
         }
@@ -27,7 +28,7 @@ apiClient.interceptors.response.use(
     (error) => {
         if (error.response && error.response.status === 401) {
             // Handle unauthorized errors, e.g., redirect to login
-            localStorage.removeItem('authToken');
+            localStorage.removeItem(ACCESS_TOKEN);
             localStorage.removeItem('user');
             // Optionally dispatch a logout action if using Redux
             // store.dispatch(setLogout());

@@ -3,8 +3,7 @@
 import { createContext, useContext, useEffect, useState, useRef } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import { routes, isProtectedRoute, isPublicRoute } from '@/services/constants/routes'
-import { ACCESS_TOKEN } from '@/services/constants/appConstants'
-import { useUser } from '@/context/user-context'
+import { ACCESS_TOKEN } from '@/constants/appConstants'
 
 type AuthContextType = {
     isAuthenticated: boolean
@@ -18,7 +17,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false)
     const pathname = usePathname()
     const router = useRouter()
-    const { hasActiveMembership, userData, fetchUser } = useUser()
     const isCheckingRef = useRef(false)
     const [loading, setLoading] = useState(true); // State for loading
 
@@ -35,23 +33,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                     setIsAuthenticated(authStatus)
                 }
 
-                if (authStatus && !userData) {
-                    await fetchUser()
-                }
-
-                if (isProtectedRoute(pathname) && authStatus && !hasActiveMembership() && userData) {
-                    router.push(`${routes.membership}#access_token=${localStorage.getItem('ACCESS_TOKEN')}`)
+                // Do nothing on public routes
+                if (isPublicRoute(pathname)) {
                     return
                 }
 
-                if (isProtectedRoute(pathname) && !authStatus) {
-                    router.push(routes.login)
+                // Redirect only when trying to access protected routes unauthenticated
+                if (!authStatus && isProtectedRoute(pathname)) {
+                    router.replace(routes.login)
                     return
                 }
 
-                if (isPublicRoute(pathname) && authStatus) {
-                    router.push(routes.dashboard)
-                }
             } finally {
                 isCheckingRef.current = false
                 setLoading(false); // Set loading to false after check
@@ -59,7 +51,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
 
         checkAuthAndRedirect()
-    }, [pathname, isAuthenticated, userData, hasActiveMembership, fetchUser, router])
+    }, [pathname, isAuthenticated, router])
 
     return (
         <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated, loading }}>

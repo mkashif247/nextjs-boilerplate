@@ -2,24 +2,22 @@
 
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/authContext';
-import { useUser } from '@/context/user-context';
 import { authApi } from '@/services/apis/dummyApi';
 import { routes } from '@/services/constants/routes';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button, Input, Card, CardContent, CardHeader, CardTitle } from '@/components/ui';
 import { toast } from 'react-toastify';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { loginSchema } from '@/services/helpers/form-schemas';
+import { ACCESS_TOKEN } from '@/constants/appConstants';
+import Link from 'next/link';
 
 type LoginFormInputs = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
     const router = useRouter();
     const { setIsAuthenticated } = useAuth();
-    const { fetchUser } = useUser();
 
     const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<LoginFormInputs>({
         resolver: zodResolver(loginSchema),
@@ -28,10 +26,9 @@ export default function LoginPage() {
     const onSubmit = async (data: LoginFormInputs) => {
         try {
             const { user, token } = await authApi.login(data.email, data.password);
-            localStorage.setItem('authToken', token);
+            localStorage.setItem(ACCESS_TOKEN, token);
             localStorage.setItem('user', JSON.stringify(user));
             setIsAuthenticated(true);
-            await fetchUser(); // Fetch user data after successful login
             toast.success('Login successful!');
             router.push(routes.dashboard);
         } catch (error: unknown) {
@@ -65,12 +62,17 @@ export default function LoginPage() {
                             />
                             {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>}
                         </div>
-                        <Button type="submit" className="w-full" disabled={isSubmitting}>
+                        <Button
+                            type="submit"
+                            className="w-full"
+                            disabled={isSubmitting}
+                            variant="default"
+                        >
                             {isSubmitting ? 'Logging in...' : 'Login'}
                         </Button>
                     </form>
                     <p className="text-center text-sm text-muted-foreground mt-4">
-                        Don&apos;t have an account? <a href={routes.signup} className="text-primary hover:underline">Sign Up</a>
+                        Don&apos;t have an account? <Link href={routes.signup} className="text-primary hover:underline">Sign Up</Link>
                     </p>
                 </CardContent>
             </Card>

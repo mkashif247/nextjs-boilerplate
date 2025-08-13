@@ -1,7 +1,6 @@
 'use client';
 
 import { useAuth } from '@/context/authContext';
-import { useUser } from '@/context/user-context';
 import { useEffect, useState, ChangeEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { routes } from '@/services/constants/routes';
@@ -15,21 +14,19 @@ import { Checkbox } from '@/components/ui/checkbox';
 
 export default function Home() {
   const { isAuthenticated, setIsAuthenticated } = useAuth();
-  const { userData, isLoading, logoutUser } = useUser();
   const router = useRouter();
   const dispatch = useDispatch();
   const todos = useSelector((state: RootState) => state.todo.todos);
   const [newTodo, setNewTodo] = useState<string>('');
 
   useEffect(() => {
-    if (!isAuthenticated && !isLoading) {
+    if (!isAuthenticated) {
       router.push(routes.login);
     }
-  }, [isAuthenticated, isLoading, router]);
+  }, [isAuthenticated, router]);
 
   const handleLogout = () => {
     setIsAuthenticated(false);
-    logoutUser();
     router.push(routes.login);
   };
 
@@ -48,7 +45,7 @@ export default function Home() {
     dispatch(removeTodo(id));
   };
 
-  if (!isAuthenticated || isLoading) {
+  if (!isAuthenticated) {
     return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
   }
 
@@ -56,7 +53,7 @@ export default function Home() {
     <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-background text-foreground">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle className="text-center text-2xl font-bold">Welcome, {userData?.id || 'User'}!</CardTitle>
+          <CardTitle className="text-center text-2xl font-bold">Welcome, User!</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-center mb-4">You are logged in.</p>

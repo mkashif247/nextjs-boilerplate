@@ -2,11 +2,11 @@ export const routes = {
     login: '/login',
     signup: '/signup',
     dashboard: '/dashboard',
-    membership: '/membership',
+    home: '/',
 };
 
 export const isProtectedRoute = (pathname: string) => {
-    const protectedRoutes = [routes.dashboard, routes.membership];
+    const protectedRoutes = [routes.dashboard, routes.home];
     return protectedRoutes.some(route => pathname.startsWith(route));
 };
 

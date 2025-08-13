@@ -2,24 +2,22 @@
 
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/authContext';
-import { useUser } from '@/context/user-context';
 import { authApi } from '@/services/apis/dummyApi';
 import { routes } from '@/services/constants/routes';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button, Input, Card, CardContent, CardHeader, CardTitle } from '@/components/ui';
 import { toast } from 'react-toastify';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { signUpSchema } from '@/services/helpers/form-schemas';
+import { ACCESS_TOKEN } from '@/constants/appConstants';
+import Link from 'next/link';
 
 type SignUpFormInputs = z.infer<typeof signUpSchema>;
 
 export default function SignUpPage() {
     const router = useRouter();
     const { setIsAuthenticated } = useAuth();
-    const { fetchUser } = useUser();
 
     const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<SignUpFormInputs>({
         resolver: zodResolver(signUpSchema),
@@ -28,10 +26,9 @@ export default function SignUpPage() {
     const onSubmit = async (data: SignUpFormInputs) => {
         try {
             const { user, token } = await authApi.register(data.email, data.password);
-            localStorage.setItem('authToken', token);
+            localStorage.setItem(ACCESS_TOKEN, token);
             localStorage.setItem('user', JSON.stringify(user));
             setIsAuthenticated(true);
-            await fetchUser(); // Fetch user data after successful registration
             toast.success('Registration successful!');
             router.push(routes.dashboard);
         } catch (error: unknown) {
@@ -79,7 +76,7 @@ export default function SignUpPage() {
                         </Button>
                     </form>
                     <p className="text-center text-sm text-muted-foreground mt-4">
-                        Already have an account? <a href={routes.login} className="text-primary hover:underline">Login</a>
+                        Already have an account? <Link href={routes.login} className="text-primary hover:underline">Login</Link>
                     </p>
                 </CardContent>
             </Card>
